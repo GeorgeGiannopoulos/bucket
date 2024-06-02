@@ -11,13 +11,14 @@
 # ==================================================================================================
 # Search the Routes based on the following patterns (comments)
 #
-# | Pattern             | URL                        | Methods | Comments
-# |---------------------|----------------------------|---------|------------------------------------
-# | --- (router 01) --- | /                          | GET     | Return a JSON to ensure that the REST-API is alive
-# | --- (router 02) --- | /bucket/v1/file            | POST    | Stores a file to the Bucket
-# | --- (router 03) --- | /bucket/v1/file/{filename} | PUT     | Updates a file to the Bucket
-# | --- (router 04) --- | /bucket/v1/file/{filename} | GET     | Returns a file from the Bucket
-# | --- (router 05) --- | /bucket/v1/file/{filename} | DELETE  | Deletes a file from the Bucket
+# | Pattern             | URL                              | Methods | Comments
+# |---------------------|----------------------------------|---------|------------------------------
+# | --- (router 01) --- | /                                | GET     | Return a JSON to ensure that the REST-API is alive
+# | --- (router 02) --- | /bucket/v1/file                  | POST    | Stores a file to the Bucket
+# | --- (router 03) --- | /bucket/v1/file/{filename}       | PUT     | Updates a file to the Bucket
+# | --- (router 04) --- | /bucket/v1/file/{filename}       | GET     | Returns a file from the Bucket
+# | --- (router 05) --- | /bucket/v1/file/{filename}       | DELETE  | Deletes a file from the Bucket
+# | --- (router 06) --- | /bucket/v1/file/{filename}/check | GET     | Returns if a file exists
 
 
 # ==================================================================================================
@@ -72,7 +73,7 @@ async def upload_file(file: UploadFile = File(...), unique: bool = False, metada
         raise HTTPException(status_code=409, detail=f"File {filename} already exists!")
     try:
         file_to_bucket(file, filepath)
-        return file_metadata(file, filename) if metadata else filename
+        return file_metadata(file, filepath) if metadata else filename
     except Exception as e:
         logger.exception(e)
         raise HTTPException(status_code=400, detail=f"Failed to store file {filename}!")
@@ -87,7 +88,7 @@ async def update_file(filename: str, file: UploadFile = File(...), metadata: boo
         raise HTTPException(status_code=404, detail=f"File {filename} not found!")
     try:
         file_to_bucket(file, filepath)
-        return file_metadata(file, filename) if metadata else filename
+        return file_metadata(file, filepath) if metadata else filename
     except Exception as e:
         logger.exception(e)
         raise HTTPException(status_code=400, detail=f"Failed to updated file {filename}!")
@@ -113,3 +114,13 @@ async def delete_file(filename: str):
         raise HTTPException(status_code=404, detail=f"File {filename} not found!")
     remove_from_bucket(filepath)
     return {"message": f"File {filename} deleted successfully"}
+
+
+# --- (router 06) ---
+@router.get('/bucket/v1/file/{filename}/check', tags=['bucket'])
+async def check_file(filename: str):
+    """This endpoint returns if a file exists in the filesystem"""
+    filepath = file_path(filename)
+    if not file_exists(filepath):
+        raise HTTPException(status_code=404, detail=f"File {filename} not found")
+    return {'message': f"File '{filename}' exist"}

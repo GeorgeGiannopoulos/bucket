@@ -11,8 +11,6 @@
 # ==================================================================================================
 #
 import logging
-logging.basicConfig(format='%(asctime)s | %(levelname)-8s | %(module)-12s | %(lineno)-4d | %(message)s',
-                    level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
@@ -44,7 +42,7 @@ def create_app():
         allow_credentials=True,
         allow_methods=ConfigFastAPI.CORS_ALLOW_METHODS,
         allow_headers=ConfigFastAPI.CORS_ALLOW_HEADERS,
-        expose_headers=["Content-Disposition"],
+        expose_headers=ConfigFastAPI.CORS_EXPOSE_HEADERS,
     )
     app.include_router(routes.router)
     return app

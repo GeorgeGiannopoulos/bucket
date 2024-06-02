@@ -1,7 +1,7 @@
 # server.py ----------------------------------------------------------------------------------------
 #
 # Description:
-#    This script is the wrapper script of the Bucket REST-API.
+#    This script is the wrapper script of the Bucker like API.
 #
 # --------------------------------------------------------------------------------------------------
 
@@ -10,7 +10,12 @@
 # Logging
 # ==================================================================================================
 #
-from app.app import logging
+import time
+import logging
+logging.basicConfig(format='%(asctime)s [%(levelname)s] %(message)s',
+                    level=logging.INFO,
+                    datefmt="%Y-%m-%dT%H:%M:%S.000Z")
+logging.Formatter.converter = time.gmtime
 logger = logging.getLogger('bucket')
 
 

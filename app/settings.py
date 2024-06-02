@@ -29,7 +29,7 @@ class ConfigEnv(object):
     #       'development' to use the Development mode [default: 'production']
     EXECUTION_MODE = environ.get('EXECUTION_MODE', 'production')
     # Gateway URL
-    BUCKET_URL = environ.get('BUCKET_URL', 'bucket.domain.gr')
+    BUCKET_HOST = environ.get('BUCKET_HOST', 'bucket.domain.gr')
     BUCKET_PORT = int(environ.get('BUCKET_PORT', 8000))
     # Log Level
     LOG_LEVEL = 'info'
@@ -58,12 +58,13 @@ class ConfigFastAPI(ConfigEnv):
     DEBUG = False
     # Middleware
     CORS_ORIGIN_WHITELIST = [
-        f'http://{ConfigEnv.BUCKET_URL}',
-        f'https://{ConfigEnv.BUCKET_URL}'
+        f'http://{ConfigEnv.BUCKET_HOST}',
+        f'https://{ConfigEnv.BUCKET_HOST}'
         # TODO: Add here all the eligible URL that can access the backend
     ]
     CORS_ALLOW_METHODS = ['*']
     CORS_ALLOW_HEADERS = ['*']
+    CORS_EXPOSE_HEADERS = ['Content-Disposition']
     #
     # --- Dev Mode ---
     #

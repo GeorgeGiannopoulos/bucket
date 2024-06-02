@@ -20,7 +20,7 @@ Use [Bucker Client](https://github.com/GeorgeGiannopoulos/clients/tree/master/bu
 
 1. Select a `python` image version that matches the one used to develop the project (replace `latest`)
 
-2. Change the environmental variable named `BUCKET_URL` for CORS support
+2. Change the environmental variable named `BUCKET_HOST` for CORS support
 
 ## How to Use
 

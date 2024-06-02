@@ -32,5 +32,6 @@ from pydantic import BaseModel
 class Metadata(BaseModel):
     original: str
     saved_as: str
-    type: str
+    type: str | None
+    sha256: str | None
     size: int

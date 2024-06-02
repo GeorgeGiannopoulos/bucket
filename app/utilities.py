@@ -65,7 +65,7 @@ def remove_from_bucket(filepath: str):
 
 def now():
     """This function returns the current timestamp"""
-    return datetime.datetime.utcnow().strftime('%Y%m%dT%H%M%S')
+    return datetime.datetime.utcnow().strftime('%Y%m%d%H%M%S%f')
 
 
 def file_extension(file: UploadFile):
@@ -81,9 +81,9 @@ def file_to_blob(file: UploadFile):
     return blob
 
 
-def file_size(file: UploadFile):
+def file_size(filepath: str):
     """This function returns the file's size"""
-    return os.path.getsize(file_path(file_name(file)))
+    return os.path.getsize(filepath)
 
 
 def file_hash(file: UploadFile):
@@ -96,9 +96,10 @@ def unique_filename(file: UploadFile):
     return f"{file_hash(file)}.{now()}.{file_extension(file)}"
 
 
-def file_metadata(file: UploadFile, saved_as: str):
+def file_metadata(file: UploadFile, filepath: str):
     """This function returns the file's metadata"""
     return Metadata(original=file.filename,
-                    saved_as=saved_as,
+                    saved_as=os.path.basename(filepath),
                     type=file.content_type,
-                    size=file_size(file))
+                    sha256=file_hash(file),
+                    size=file_size(filepath))

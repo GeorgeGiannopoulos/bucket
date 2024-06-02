@@ -1,4 +1,4 @@
-FROM python:3.11.8
+FROM python:3.11
 
 ENV PROJECT_HOME=/app \
     VIRTUAL_ENV=/opt/venv
