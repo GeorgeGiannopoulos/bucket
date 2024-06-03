@@ -19,6 +19,7 @@ logger = logging.getLogger(__name__)
 # ==================================================================================================
 # Build-in
 import os
+import io
 import hashlib
 import datetime
 # Installed
@@ -103,3 +104,23 @@ def file_metadata(file: UploadFile, filepath: str):
                     type=file.content_type,
                     sha256=file_hash(file),
                     size=file_size(filepath))
+
+
+def file_info(filepath: str, info: str = None):
+    """This function returns the meradata of a file or a part of it"""
+    # Read the file
+    file_content = file_from_bucket(filepath)
+    # Create a BytesIO object from the file content
+    file_stream = io.BytesIO(file_content)
+    # Create an UploadFile instance
+    upload_file = UploadFile(filename=os.path.basename(filepath), file=file_stream)
+    # Get files metadata
+    metadata = file_metadata(upload_file, filepath)
+    # Convert to dictionary
+    metadata = metadata.dict()
+    # Remove original filename because is not known after the file is saved
+    metadata.pop('original')
+    # Return a specific property of metadata
+    if info:
+        return metadata.get(info, None)
+    return metadata

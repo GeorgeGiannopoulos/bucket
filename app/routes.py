@@ -11,14 +11,15 @@
 # ==================================================================================================
 # Search the Routes based on the following patterns (comments)
 #
-# | Pattern             | URL                              | Methods | Comments
-# |---------------------|----------------------------------|---------|------------------------------
-# | --- (router 01) --- | /                                | GET     | Return a JSON to ensure that the REST-API is alive
-# | --- (router 02) --- | /bucket/v1/file                  | POST    | Stores a file to the Bucket
-# | --- (router 03) --- | /bucket/v1/file/{filename}       | PUT     | Updates a file to the Bucket
-# | --- (router 04) --- | /bucket/v1/file/{filename}       | GET     | Returns a file from the Bucket
-# | --- (router 05) --- | /bucket/v1/file/{filename}       | DELETE  | Deletes a file from the Bucket
-# | --- (router 06) --- | /bucket/v1/file/{filename}/check | GET     | Returns if a file exists
+# | Pattern             | URL                                 | Methods | Comments
+# |---------------------|-------------------------------------|---------|---------------------------
+# | --- (router 01) --- | /                                   | GET     | Return a JSON to ensure that the REST-API is alive
+# | --- (router 02) --- | /bucket/v1/file                     | POST    | Stores a file to the Bucket
+# | --- (router 03) --- | /bucket/v1/file/{filename}          | PUT     | Updates a file to the Bucket
+# | --- (router 04) --- | /bucket/v1/file/{filename}          | GET     | Returns a file from the Bucket
+# | --- (router 05) --- | /bucket/v1/file/{filename}          | DELETE  | Deletes a file from the Bucket
+# | --- (router 06) --- | /bucket/v1/file/{filename}/check    | GET     | Returns if a file exists
+# | --- (router 07) --- | /bucket/v1/file/{filename}/metadata | GET     | Returns a file's metadata
 
 
 # ==================================================================================================
@@ -40,7 +41,7 @@ from fastapi import File, UploadFile, HTTPException, Response
 # Custom
 from app.models import Metadata
 from app.utilities import file_name, file_path, file_exists, remove_from_bucket, file_from_bucket, \
-    unique_filename, file_to_bucket, file_metadata
+    unique_filename, file_to_bucket, file_metadata, file_info
 
 
 # ==================================================================================================
@@ -124,3 +125,13 @@ async def check_file(filename: str):
     if not file_exists(filepath):
         raise HTTPException(status_code=404, detail=f"File {filename} not found")
     return {'message': f"File '{filename}' exist"}
+
+
+# --- (router 07) ---
+@router.get('/bucket/v1/file/{filename}/metadata', tags=['bucket'])
+async def metadata_of_file(filename: str, info: str = None):
+    """This endpoint returns a file's metadata"""
+    filepath = file_path(filename)
+    if not file_exists(filepath):
+        raise HTTPException(status_code=404, detail=f"File {filename} not found")
+    return file_info(filepath, info)
