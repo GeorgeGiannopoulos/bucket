@@ -97,13 +97,19 @@ def unique_filename(file: UploadFile):
     return f"{file_hash(file)}.{now()}.{file_extension(file)}"
 
 
+def modified_time(filepath: str):
+    """This function returns the last modified timestamp of the file."""
+    return datetime.datetime.fromtimestamp(os.stat(filepath).st_mtime)
+
+
 def file_metadata(file: UploadFile, filepath: str):
     """This function returns the file's metadata"""
     return Metadata(original=file.filename,
                     saved_as=os.path.basename(filepath),
                     type=file.content_type,
                     sha256=file_hash(file),
-                    size=file_size(filepath))
+                    size=file_size(filepath),
+                    modified_time = modified_time(filepath))
 
 
 def file_info(filepath: str, info: str = None):

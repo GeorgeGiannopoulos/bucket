@@ -1,7 +1,7 @@
 # server.py ----------------------------------------------------------------------------------------
 #
 # Description:
-#    This script is the wrapper script of the Bucker like API.
+#    This script is the wrapper script of the Bucket like API.
 #
 # --------------------------------------------------------------------------------------------------
 

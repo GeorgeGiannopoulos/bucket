@@ -28,7 +28,7 @@ class ConfigEnv(object):
     # NOTE: To control execution mode export the OS environmental variable 'EXECUTION_MODE' to
     #       'development' to use the Development mode [default: 'production']
     EXECUTION_MODE = environ.get('EXECUTION_MODE', 'production')
-    # Gateway URL
+    # Bucket URL
     BUCKET_HOST = environ.get('BUCKET_HOST', 'bucket.domain.gr')
     BUCKET_PORT = int(environ.get('BUCKET_PORT', 8000))
     # Log Level
